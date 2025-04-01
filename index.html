@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do You Love Me?</title>
+    <style>
+        /* Hacking Theme */
+        body {
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            background-color: #000;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Hide scrollbar */
+        }
+
+        h1 {
+            font-size: 40px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .container {
+            margin: 50px auto;
+            max-width: 500px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 255, 0, 0.5);
+        }
+
+        input {
+            padding: 10px;
+            font-size: 18px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 2px solid #00ff00;
+            width: 100%;
+            background-color: #1a1a1a;
+            color: #00ff00;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            border: 2px solid #00ff00;
+            background-color: black;
+            color: #00ff00;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #00ff00;
+            color: black;
+        }
+
+        img {
+            margin: 20px 0;
+            width: 150px; /* Adjusted size for virus GIF */
+        }
+
+        /* Hacking Screen */
+        #hackedScreen {
+            background-color: black;
+            color: #00ff00;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden; /* Hide scrollbar */
+        }
+
+        #hackingOutput {
+            font-size: 14px;
+            white-space: pre-line;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        #loading {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #ffcccb;
+        }
+
+        /* Countdown and Virus Prank */
+        #countdownOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            z-index: 100;
+        }
+
+        #timer {
+            font-size: 50px;
+            color: red;
+        }
+
+        #virusPrank {
+            background: url('virus.gif') center center no-repeat;
+            background-size: contain; /* Ensure it doesn't cover the whole screen */
+            width: 300px; /* Set fixed width */
+            height: 300px; /* Set fixed height */
+            z-index: 101;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="startScreen" class="container">
+        <h1>Do You Love Me? 💖</h1>
+        <img src="img.gif" alt="Heart">
+        <input type="text" id="nameInput" placeholder="Enter your name here" required>
+        <button id="startBtn">Start 💘</button>
+    </div>
+
+    <div id="questionScreen" class="container hidden">
+        <h1>Do you love me? 💕</h1>
+        <div>
+            <button class="yes" id="yesBtn">Yes 💖</button>
+            <button class="no" id="noBtn">No 💔</button>
+        </div>
+    </div>
+
+    <div id="hackedScreen" class="container hidden">
+        <h1>You Got Hacked!</h1>
+        <p class="warning">⚠ Warning: Your system has been breached!</p>
+        <div id="hackingOutput"></div>
+        <div id="loading">Loading virus...</div>
+    </div>
+
+    <div id="virusPrank"></div>
+
+    <audio id="hackingSound" src="hacking-sound.mp3" preload="auto"></audio>
+    <audio id="virusSound" src="virus-alert.mp3" preload="auto"></audio>
+
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const nameInput = document.getElementById('nameInput');
+        
+        const startScreen = document.getElementById('startScreen');
+        const questionScreen = document.getElementById('questionScreen');
+        const hackedScreen = document.getElementById('hackedScreen');
+        const hackingOutput = document.getElementById('hackingOutput');
+        const loadingDiv = document.getElementById('loading');
+        const virusPrank = document.getElementById('virusPrank');
+
+        const hackingSound = document.getElementById('hackingSound');
+        const virusSound = document.getElementById('virusSound');
+
+        startBtn.addEventListener('click', function() {
+            if (nameInput.value) {
+                startScreen.classList.add('hidden');
+                questionScreen.classList.remove('hidden');
+            } else {
+                alert("Please enter your name first!");
+            }
+        });
+
+        yesBtn.addEventListener('click', function() {
+            const name = nameInput.value;
+            alert(`I love you too, ${name}! 💖`);
+            questionScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            nameInput.value = ""; // Reset the name input
+        });
+
+        noBtn.addEventListener('click', function() {
+            questionScreen.classList.add('hidden');
+            hackedScreen.classList.remove('hidden');
+            document.body.style.backgroundColor = 'black'; // Switch to dark mode
+            hackingSound.play(); // Play hacking sound
+            simulateHacking();  // Start the hacking simulation
+        });
+
+        // Hacking simulation
+        function simulateHacking() {
+            const hackingText = [
+                "Initializing access to remote server...",
+                "Connecting to 192.168.1.102:80...",
+                "Remote access granted...",
+                "Extracting personal data...",
+                "IP Address: 192.168.1.102",
+                "Location: [Lat: 40.7128, Long: -74.0060]",
+                "Disabling Firewall...",
+                "Uploading data to the darknet...",
+                "Encrypting all data...",
+                "Transfer complete.",
+                "System compromised! Immediate action required!",
+                "Caution: Malware detected on the device!"
+            ];
+
+            let index = 0;
+            const infiniteLoop = setInterval(function() {
+                if (index < hackingText.length) {
+                    hackingOutput.innerHTML += hackingText[index] + "<br>";
+                    index++;
+                    hackingOutput.scrollTop = hackingOutput.scrollHeight;
+                } else {
+                    clearInterval(infiniteLoop);
+                    loadingDiv.innerHTML = "Virus detected! Your device is infected!";
+                    startCountdown(); // Start countdown for virus prank
+                }
+            }, 700); // 0.3 second interval
+        }
+
+        // Start countdown for virus prank
+        function startCountdown() {
+            let countdown = 3; // 5 seconds countdown
+            const countdownOverlay = document.createElement('div');
+            countdownOverlay.id = 'countdownOverlay';
+            countdownOverlay.innerHTML = `<div>Virus will activate in <span id="timer">${countdown}</span> seconds!</div>`;
+            document.body.appendChild(countdownOverlay);
+
+            const timer = document.getElementById('timer');
+            const countdownInterval = setInterval(function() {
+                countdown--;
+                timer.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    virusSound.play(); // Play virus sound
+                    startVirusPrank(); // Start virus prank
+                }
+            }, 1000); // Update every second
+        }
+
+        // Virus prank function
+        function startVirusPrank() {
+            document.getElementById('countdownOverlay').remove(); // Remove countdown overlay
+            virusPrank.style.display = 'block'; // Display the virus prank effect
+
+            // Simulate the virus prank for 5 seconds before turning off the screen
+            setTimeout(function() {
+                virusPrank.style.display = 'none';
+                turnOffScreen();
+            }, 7000); // Virus prank runs for 7 seconds
+        }
+
+        // Function to simulate turning off the screen
+        function turnOffScreen() {
+            const shutdownOverlay = document.createElement('div');
+            shutdownOverlay.style.position = 'fixed';
+            shutdownOverlay.style.top = '0';
+            shutdownOverlay.style.left = '0';
+            shutdownOverlay.style.width = '100vw';
+            shutdownOverlay.style.height = '100vh';
+            shutdownOverlay.style.backgroundColor = 'black';
+            shutdownOverlay.style.color = 'red';
+            shutdownOverlay.style.display = 'flex';
+            shutdownOverlay.style.justifyContent = 'center';
+            shutdownOverlay.style.alignItems = 'center';
+            shutdownOverlay.style.fontSize = '50px';
+            shutdownOverlay.innerHTML = "SYSTEM SHUTTING DOWN...";
+            document.body.appendChild(shutdownOverlay);
+            
+setTimeout(function() {
+                document.body.innerHTML = '';
+                // Display error message
+            }, 4000); // Show error message after 3 seconds
+        }
+    </script>
+
+</body>
+</html>

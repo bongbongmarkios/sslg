@@ -1,0 +1,41 @@
+/* Officer Profiles Container */
+.officers-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.officer-card {
+    background-color: #f1f1f1;
+    width: 250px;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.officer-card:hover {
+    transform: scale(1.05);
+}
+
+.officer-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.officer-card h3 {
+    margin: 10px 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.officer-card p {
+    font-size: 1em;
+    color: #555;
+}

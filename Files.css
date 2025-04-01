@@ -1,0 +1,114 @@
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Changed from center to flex-start */
+    height: 100vh;
+    margin: 0;
+    background-color: #f5f5f5;
+}
+#View {
+  font-weight: bold;
+  color: blue;
+  text-decoration: none;
+  padding: 3px;
+  display: block;
+  text-align: center;
+  font-family: Courier New;
+  font-size: 20px;
+margin-bottom: 20px;
+}
+#View:hover {
+  color: red;
+}
+
+.container {
+    text-align: center;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 900px;
+    margin-top: 80px; /* Added margin-top */
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.buttons {
+    text-align: right;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    background: white;
+    padding: 10px 0;
+    z-index: 10;
+}
+
+button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button#delete-btn {
+    background-color: #dc3545;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button#delete-btn:hover {
+    background-color: #c82333;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+ol {
+    text-align: left;
+    padding: 0;
+    list-style-type: decimal;
+    margin: 0;
+}
+
+ol li {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+ol li:nth-child(even) {
+    background-color: #f1f1f1;
+}

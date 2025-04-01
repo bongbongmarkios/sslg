@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <link href="Files.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="particles.min.js"></script>
+    <style>
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 22px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar-open {
+            width: 250px;
+        }
+
+        /* Hamburger icon styles */
+        .hamburger {
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 1;
+            display: inline-block;
+        }
+
+        .bar1, .bar2, .bar3 {
+            width: 30px;
+            height: 3.7px;
+            background-color: white;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
+
+        /* Rotate hamburger icon to X when sidebar is open */
+        .change .bar1 {
+            transform: rotate(-45deg) translate(-7px, 5px);
+        }
+
+        .change .bar2 {
+            opacity: 0;
+        }
+
+        .change .bar3 {
+            transform: rotate(45deg) translate(-7.5px, -7.5px);
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 0;
+            transition: margin-left 0.5s;
+            padding: 16px;
+        }
+
+        .sidebar-open + .main-content {
+            margin-left: 250px;
+        }
+
+        /* Centered container for the content */
+        .centered-container {
+            text-align: center;
+            padding: 100px;
+        }
+
+        /* Particles background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        h1, p {
+            color: white;
+        }
+
+        img {
+            margin-top: 20px;
+            width: 150px;
+            height: auto;
+        }
+
+        /* Styles for the officer profile container */
+        .officer-profile {
+            display: none; /* Hide by default */
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body style="background: linear-gradient(to right, skyblue, #87CEFA);">
+    <!-- Hamburger icon to toggle sidebar -->
+    <div class="hamburger" onclick="toggleSidebar()">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+       <a href="index.html">Home</a>
+       <a href="Scanner.html">Scan QR</a>
+       <a href="Files.html">Files</a>
+       <a href="qrcode_creator.html">Generate QR</a>
+              <a href="officers.html">Profile</a>
+    </div>
+
+    <!-- Main Content with Enhanced Live Wallpaper -->
+    <div id="particles-js"></div>
+    <script src="script.js"></script>
+    
+    <div class="container centered-container">
+        <h1>QR Code Scanner</h1>
+        <a href="Files.html" id="View">> View Scanned Data <</a>
+        <div id="qr-reader" style="width:500px; margin: 0 auto;"></div> <!-- Centered Scanner -->
+
+        <!-- Officer Profile Section -->
+        <div class="officer-profile" id="officerProfile">
+            <h2>Officer Profile</h2>
+            <p id="officerName"></p>
+            <p id="officerGradeLevel"></p>
+            <p id="officerStrand"></p>
+            <p id="officerPosition"></p>
+        </div>
+    </div>
+
+    <audio id="beep-sound" src="beep.mp3" preload="auto"></audio>
+    <script src="html5-qrcode.min.js"></script>
+    <script>
+        function playBeep(times) {
+            const beep = document.getElementById('beep-sound');
+            let count = 0;
+            const interval = setInterval(() => {
+                beep.play();
+                count++;
+                if (count === times) clearInterval(interval);
+            }, 500);
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            const currentTime = new Date().getTime();
+            const currentDate = new Date().toLocaleDateString();
+            let scannedData = JSON.parse(localStorage.getItem('scannedData')) || [];
+            const existingEntry = scannedData.find(entry => entry.data === decodedText);
+
+            if (existingEntry) {
+                const timeDiff = (currentTime - existingEntry.timestamp) / 1000 / 60; // in minutes
+                if (timeDiff < 1) {
+                    alert("This QR code was scanned less than a minute ago.");
+                    return;
+                }
+            } else {
+                scannedData.push({ data: decodedText, timestamp: currentTime, date: currentDate });
+            }
+
+            localStorage.setItem('scannedData', JSON.stringify(scannedData));
+            displayOfficerProfile(decodedText); // Display officer profile based on scanned data
+        }
+
+        function onScanFailure(error) {
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        function displayOfficerProfile(scannedData) {
+    // Example officer data (In a real app, this would be fetched from a database)
+    const officerData = {
+        "Shara Chariz Cabrillos": {
+            gradeLevel: "Grade 12",
+            strand: "Humss",
+            position: "President"
+        },
+        "John Doe": {
+            gradeLevel: "Grade 11",
+            strand: "STEM",
+            position: "Vice President"
+        },
+        // Add more officers as needed
+    };
+
+    const profileContainer = document.getElementById('officerProfile');
+    const officerName = document.getElementById('officerName');
+    const officerGradeLevel = document.getElementById('officerGradeLevel');
+    const officerStrand = document.getElementById('officerStrand');
+    const officerPosition = document.getElementById('officerPosition');
+
+    // Split the scanned data into words (assuming space-separated data)
+    const scannedParts = scannedData.split(' ');
+
+    // Extract the officer name (we'll assume first 3 words form the name)
+    const name = `${scannedParts[0]} ${scannedParts[1]} ${scannedParts[2]}`;
+
+    // Check if the officer is in our database
+    if (officerData[name]) {
+        const officer = officerData[name];
+
+        officerName.innerText = `Name: ${name}`;
+        officerGradeLevel.innerText = `Grade Level: ${scannedParts[3] || officer.gradeLevel}`;
+        officerStrand.innerText = `Strand/Section: ${scannedParts[4] || officer.strand}`;
+        officerPosition.innerText = `Position: ${scannedParts[5] || officer.position}`;
+        profileContainer.style.display = "block"; // Show the profile
+        playBeep(1); // Play beep sound only when a profile is found and displayed
+    } else {
+        profileContainer.style.display = "none"; // Hide the profile if not found
+        alert('Officer not found!');
+    }
+}
+
+
+        window.addEventListener('load', () => {
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+                "qr-reader", { fps: 10, qrbox: 250 });
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const hamburger = document.querySelector(".hamburger");
+            sidebar.classList.toggle("sidebar-open");
+            hamburger.classList.toggle("change");
+        }
+
+        // Initialize particles.js for live wallpaper
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 150,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.7 },
+                "size": { "value": 4 },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 100,
+                    "color": "#ffffff",
+                    "opacity": 0.5,
+                    "width": 2
+                },
+                "move": { "enable": true, "speed": 8 }
+            },
+            "interactivity": {
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "bubble" }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

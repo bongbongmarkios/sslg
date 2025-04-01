@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Generator</title>
+
+<style>
+  body {
+  font-family: Arial, sans-serif;
+  background-color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul{
+  list-style-type: none;
+  background-color: hsl(0, 0%, 0%);
+  padding: 3px;
+  margin: 0px;
+  overflow: hidden;
+  border: 1px solid red;
+  box-shadow: 0 0 20px red;
+}
+
+.navbar a{
+  color: white;
+  text-decoration: none;
+  padding: 15px;
+  display: block;
+  text-align: center;
+  margin-left: 3px;
+  margin-right: -15px;
+  font-family: Times New Roman;
+  font-size: 13px;
+}
+
+.navbar a:hover{
+  border-radius: 20px;
+  background-color: hsl(95, 70%, 97%);
+  color: red;
+  padding: 7px;
+  margin-top: 6.5px;
+  box-shadow: 0 0 20px rgb(250, 20, 200);
+  transition: .3s ease-in-out;
+}
+.navbar li{
+  float: left;
+}
+#home,#info,#scanner,#creator{
+  height: 15px;
+  margin-right: 10px;
+  margin-left: 5px;
+}
+#logo, #Gideon{
+  height: 45px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  padding: 7px;
+  margin-left: 8px;
+  background-color: white;
+  border-radius: 50px;
+  box-shadow: 0 0 20px yellow;
+}
+#Gideon {
+  box-shadow: 0 0 20px blue;
+  position: left;
+  position: absolute;
+  right: 10px;
+}
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px white;
+}
+h1, h2, h4{ 
+  text-align: center;
+  color: black;
+  margin-bottom: 32px;
+  margin-top: 10px;
+  font-size: 25px;
+  align-items: center;
+  font-family: Times New Roman;
+}
+h4{
+  color: white;
+  font-size: 9.3px;
+  margin-top: -2px;
+  position: absolute;
+  top: 90px;
+  left: 20%;
+}
+h2{
+  font-size: 50px;
+}
+p, h3{
+  font-family: Courier New;
+  font-size: 19px;
+  align-content: center;
+  justify-content: relative;
+}
+p1{
+  font-family: Times New Roman;
+  font-size: 15px;
+  justify-content: flex;
+}
+form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-family: Courier New;
+  font-size: 18px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn {
+  background-color: black;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto;
+  font-size: 20px;
+  overflow: hidden;
+  font-family: Courier New;
+  margin-top: 15px;
+  box-shadow: 0 0 13px skyblue;
+}
+
+.btn:hover {
+  background-color: #00f;
+  border: none;
+  outline: none;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 12px;
+  box-shadow: 0 0 10px red;
+}
+.qrcode-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+#qrcode canvas {
+  display: inline-block;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px white;
+}
+#download{
+  margin-top: -95px;
+  
+}
+</style>
+</head>
+<body>
+    <link rel="stylesheet" href="style.css">
+    <script src="particles.min.js"></script>
+    <style>
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 22px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar-open {
+            width: 250px;
+        }
+
+        /* Hamburger icon styles */
+        .hamburger {
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 1;
+            display: inline-block;
+        }
+
+        .bar1, .bar2, .bar3 {
+            width: 30px;
+            height: 3.7px;
+            background-color: white;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
+
+        /* Rotate hamburger icon to X when sidebar is open */
+        .change .bar1 {
+            transform: rotate(-45deg) translate(-7px, 5px);
+        }
+
+        .change .bar2 {
+            opacity: 0;
+        }
+
+        .change .bar3 {
+            transform: rotate(45deg) translate(-7.5px, -7.5px);
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 0;
+            transition: margin-left 0.5s;
+            padding: 16px;
+        }
+
+        .sidebar-open + .main-content {
+            margin-left: 250px;
+        }
+
+        /* Centered container for the content */
+        .centered-container {
+            text-align: center;
+            padding: 100px;
+        }
+
+        /* Particles background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        h1, p {
+            color: white;
+        }
+
+        img {
+            margin-top: 20px;
+            width: 150px;
+            height: auto;
+        }
+        
+    </style>
+</head>
+<body style="background: linear-gradient(to right, skyblue, #87CEFA);">
+    <!-- Hamburger icon to toggle sidebar -->
+    <div class="hamburger" onclick="toggleSidebar()">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+       <a href="index.html">Home</a>
+       <a href="Scanner.html">Scan QR</a>
+       <a href="Files.html">Files</a>
+       <a href="qrcode_creator.html">Generate QR</a>
+       <a href="officers.html">Profile</a>
+    </div>
+
+    <!-- Main Content with Enhanced Live Wallpaper -->
+    <div id="particles-js"></div>
+    <!-- JavaScript for enhanced lively wallpaper -->
+    <script src="script.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const hamburger = document.querySelector(".hamburger");
+            
+            // Toggle sidebar visibility
+            sidebar.classList.toggle("sidebar-open");
+
+            // Change hamburger icon to X when sidebar is open
+            hamburger.classList.toggle("change");
+        }
+
+        // Initialize particles.js for live wallpaper
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 150,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.7 },
+                "size": { "value": 4 },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 100,
+                    "color": "#ffffff",
+                    "opacity": 0.5,
+                    "width": 2
+                },
+                "move": { "enable": true, "speed": 8 }
+            },
+            "interactivity": {
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "bubble" }
+                }
+            }
+        });
+    </script>
+    
+<div class="container">
+  <h1>QR Code Generator</h1>
+  <form id="codeForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required><br><br>
+    
+    <label for="grade">Grade level:</label>
+    <input type="text" id="grade" required><br><br>
+    
+    <label for="strand">Strand/Section:</label>
+    <input type="text" id="strand" required><br><br>
+    
+    <label for="position">Position:</label>
+    <input type="text" id="position" required><br><br>
+    
+    <button type="button" class="btn" onclick="generateQRCode()">Create QR Code</button>
+  </form>
+
+  <div id="qrcode" class="qrcode-container">
+    <!-- QR code will be displayed here -->
+  </div>
+</div>
+<script src="qrcode.min.js"></script>
+<script>
+function generateQRCode() {
+  // Get input values
+  const name = document.getElementById('name').value.trim();
+  const grade = document.getElementById('grade').value.trim();
+  const strand = document.getElementById('strand').value.trim();
+  const position = document.getElementById('position').value.trim();
+
+  // Validate inputs
+  if (!name || !grade || !strand || !position) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  // Generate text for QR code (example: combining fields)
+  const codeText = `${name} 
+  Grade ${grade} 
+  ${strand} 
+  ${position}`;
+
+  // Generate QR code
+  const qrCodeContainer = document.getElementById('qrcode');
+  qrCodeContainer.innerHTML = ''; // Clear previous QR code if any
+
+  const qrCode = new QRCode(qrCodeContainer, {
+    text: codeText,
+    width: 200,
+    height: 200,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H // High error correction level
+  });
+
+  // Show QR code container
+  qrCodeContainer.style.display = 'block';
+}
+</script>
+</body>
+</html>
